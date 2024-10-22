@@ -1,0 +1,44 @@
+{
+    "compilerOptions": {
+        "target": "ES2020",
+        "module": "commonjs",
+        "declaration": true,
+        "outDir": "./dist/esm",
+        "rootDir": "lib",
+        "strict": true,
+        "noImplicitAny": true,
+        "strictNullChecks": true,
+        "checkJs": true,
+        "allowJs": true,
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "types": [
+            "chai",
+            "mocha",
+            "node"
+        ],
+        "lib": [
+            "es6",
+            "dom",
+            "es2021",
+            "ES2021.String"
+        ],
+        "typeRoots": [
+            "node_modules/@types",
+            "lib/types",
+            "src/types",
+        ],
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "allowUnreachableCode": true,
+        "useUnknownInCatchVariables": false,
+    },
+    "include": [
+        "./lib"
+    ],
+    "exclude": [
+        "node_modules",
+        "<node_internals>/**"
+    ]
+}

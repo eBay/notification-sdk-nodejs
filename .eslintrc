@@ -1,5 +1,9 @@
 {
-    "extends": "ebay",
+    "extends": [
+        "ebay",
+        "eslint:recommended",
+        "plugin:@typescript-eslint/recommended"
+    ],
     "parserOptions": {
         "ecmaVersion": 2018
     },
@@ -10,5 +14,11 @@
                 "asyncArrow": "always"
             }
         ]
-    }
+    },
+    "ignorePatterns": [
+        "dist/"
+    ],
+    "plugins": [
+        "@typescript-eslint"
+    ]
 }

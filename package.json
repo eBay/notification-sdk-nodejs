@@ -1,8 +1,12 @@
 {
-  "name": "event-notification-nodejs-sdk",
-  "version": "1.0.3",
+  "name": "@ebay/event-notification-nodejs-sdk",
+  "version": "2.0.0",
   "description": "A NodeJS SDK for processing eBay event notifications",
-  "main": "lib/index.js",
+  "main": "./dist/cjs/index.js",
+  "module": "./dist/esm/index.js",
+  "files": [
+    "dist/"
+  ],
   "repository": {
     "type": "git",
     "url": "https://github.com/eBay/event-notification-nodejs-sdk.git"
@@ -12,8 +16,10 @@
   },
   "homepage": "https://github.com/eBay/event-notification-nodejs-sdk#readme",
   "scripts": {
-    "start": "node examples/example.js",
-    "test": "eslint . && mocha"
+    "start": "ts-node examples/example.ts",
+    "test": "eslint . && mocha --require ts-node/register 'test/**/*.ts'",
+    "tsc": "tsc -p tsconfig.json && tsc -p tsconfig-cjs.json",
+    "prepublish": "npm run tsc"
   },
   "keywords": [
     "eBay",
@@ -24,18 +30,27 @@
   "author": "Lokesh Rishi",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^1.7.7",
     "ebay-oauth-nodejs-client": "^1.2.1",
-    "express": "^4.17.1",
-    "lru-cache": "^6.0.0"
+    "express": "^4.21.1",
+    "lru-cache": "^11.0.1"
   },
   "devDependencies": {
+    "@types/chai": "^5.0.0",
+    "@types/express": "^5.0.0",
+    "@types/mocha": "^10.0.9",
+    "@types/node": "^22.7.7",
+    "@typescript-eslint/eslint-plugin": "^8.10.0",
+    "@typescript-eslint/parser": "^8.10.0",
     "axios-mock-adapter": "^1.19.0",
     "chai": "^4.2.0",
-    "eslint": "^6.8.0",
+    "eslint": "^8.57.1",
     "eslint-config-ebay": "^1.1.1",
     "mocha": "^6.1.4",
-    "nock": "^13.0.11"
+    "nock": "^13.0.11",
+    "ts-node": "^10.9.2",
+    "ts-node-dev": "^2.0.0",
+    "typescript": "^5.6.3"
   },
   "directories": {
     "example": "examples",

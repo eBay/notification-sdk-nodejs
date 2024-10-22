@@ -1,6 +1,6 @@
 /*
  * *
- *  * Copyright 2021 eBay Inc.
+ *  * Copyright 2024 eBay Inc.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -18,25 +18,26 @@
 
 'use strict';
 
-const topics = require('../constants').TOPICS;
-const accountDeletionMessageProcessor = require('./accountDeletionMessageProcessor');
-const priorityListingRevisionMessageProcessor = require('./priorityListingRevisionMessageProcessor');
+import { TOPICS as topics } from '../constants';
+import { ProcessorModule } from '../types/Processor';
+import * as accountDeletionMessageProcessor from './accountDeletionMessageProcessor';
+import * as priorityListingRevisionMessageProcessor from './priorityListingRevisionMessageProcessor';
 
 /**
  * Get the Processor for the given topic
  *
- * @param {String} topic
+ * @param {string} topic
+ * @returns {any} The processor module
  */
-const getProcessor = (topic) => {
+const getProcessor = (topic: string): ProcessorModule => {
     switch (topic) {
         case topics.MARKETPLACE_ACCOUNT_DELETION:
             return accountDeletionMessageProcessor;
-            case topics.PRIORITY_LISTING_REVISION:
-                return priorityListingRevisionMessageProcessor;
+        case topics.PRIORITY_LISTING_REVISION:
+            return priorityListingRevisionMessageProcessor;
         default:
-            // eslint-disable-next-line no-throw-literal
-            throw `Message processor not registered for: ${topic}`;
+            throw new Error(`Message processor not registered for: ${topic}`);
     }
 };
 
-module.exports = { getProcessor };
+export { getProcessor };
