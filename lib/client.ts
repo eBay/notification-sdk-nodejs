@@ -1,6 +1,6 @@
 /*
  * *
- *  * Copyright 2021 eBay Inc.
+ *  * Copyright 2024 eBay Inc.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -18,23 +18,32 @@
 
 'use strict';
 
-const axios = require('axios');
-const EbayAuthToken = require('ebay-oauth-nodejs-client');
-const LRU = require('lru-cache'),
-    cache = new LRU(100);
+import axios, { AxiosRequestConfig } from 'axios';
+import EbayAuthToken from 'ebay-oauth-nodejs-client';
+import { LRUCache } from 'lru-cache';
+import * as constants from './constants';
+import { Config } from './types/Config';
+import { TokenResponse } from './types/TokenResponse';
+import { PublicKeyResponse } from './types/PublicKeyResponse';
 
-const constants = require('./constants');
+const cache = new LRUCache<string, PublicKeyResponse>({
+    max: 100
+});
 
 /**
- * Uses the eBay  OAuth client to get app token
- * @param {String} environment
- * @returns Application token
+ * Uses the eBay OAuth client to get app token
+ * @param {Config} config
+ * @returns {Promise<any>} Application token
  */
-const getAppToken = async (config) => {
+const getAppToken = async (config: Config): Promise<TokenResponse> => {
     try {
+        const envConfig = config[config.environment];
+        if (!envConfig) {
+            throw new Error(`Environment configuration for ${config.environment} is missing.`);
+        }
         const ebayAuthToken = new EbayAuthToken({
-            clientId: config.clientId,
-            clientSecret: config.clientSecret,
+            clientId: envConfig.clientId,
+            clientSecret: envConfig.clientSecret,
             env: config.environment,
             redirectUri: ''
         });
@@ -50,11 +59,11 @@ const getAppToken = async (config) => {
 /**
  * Look for the Public key in cache, if not found call eBay Notification API
  *
- * @param {String} keyId
- * @param {JSON} config
- * @returns {String} Public key
+ * @param {string} keyId
+ * @param {Config} config
+ * @returns {Promise<string>} Public key
  */
-const getPublicKey = async (keyId, config) => {
+const getPublicKey = async (keyId: string, config: Config): Promise<PublicKeyResponse> => {
     const publicKey = cache.get(keyId);
 
     if (publicKey) {
@@ -66,7 +75,7 @@ const getPublicKey = async (keyId, config) => {
             constants.NOTIFICATION_API_ENDPOINT_SANDBOX : constants.NOTIFICATION_API_ENDPOINT_PRODUCTION;
         const tokenResponse = await getAppToken(config);
         const uri = `${notificationApiEndpoint}${keyId}`;
-        const requestConfig = {
+        const requestConfig: AxiosRequestConfig = {
             method: 'GET',
             url: uri,
             headers: {
@@ -77,15 +86,15 @@ const getPublicKey = async (keyId, config) => {
 
         const notificationApiResponse = await axios(requestConfig);
 
-        if (!notificationApiResponse
-            || notificationApiResponse.status !== constants.HTTP_STATUS_CODE.OK) {
+        if (!notificationApiResponse || notificationApiResponse.status !== constants.HTTP_STATUS_CODE.OK) {
             throw new Error(`Public key retrieval failed with ${notificationApiResponse.status} for ${uri}`);
         }
         cache.set(keyId, notificationApiResponse.data);
         return notificationApiResponse.data;
     } catch (error) {
+        console.error(`Error retrieving public key for ${keyId}:`, error);
         throw error;
     }
 };
 
-module.exports = { getPublicKey };
+export { getPublicKey };

@@ -1,6 +1,6 @@
 /*
  * *
- *  * Copyright 2023 eBay Inc.
+ *  * Copyright 2024 eBay Inc.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -18,14 +18,8 @@
 
 'use strict';
 
-/**
- * Process the message
- *
- * @param {JSON} message
- */
-const processInternal = (message) => {
-    const data = message.notification.data;
-    console.log(`\n==========================\PriorityListingRevision Date :` + JSON.stringify(data, null, 2))
-};
+export type ProcessorFunction = (message: import('./Message').Message) => void;
 
-module.exports = { process: processInternal };
+export interface ProcessorModule {
+    process: ProcessorFunction;
+}

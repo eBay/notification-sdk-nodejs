@@ -1,6 +1,7 @@
+
 /*
  * *
- *  * Copyright 2021 eBay Inc.
+ *  * Copyright 2024 eBay Inc.
  *  *
  *  * Licensed under the Apache License, Version 2.0 (the "License");
  *  * you may not use this file except in compliance with the License.
@@ -18,17 +19,24 @@
 
 'use strict';
 
-/**
- * Process the message
- *
- * @param {JSON} message
- */
-const processInternal = (message) => {
-    const data = message.notification.data;
-    // eslint-disable-next-line no-console
-    console.log(`\n==========================\nUser ID: ${data.userId}`);
-    // eslint-disable-next-line no-console
-    console.log(`Username: ${data.username}\n==========================\n`);
-};
+type JSONValue = string | number | boolean | { [x: string]: JSONValue } | JSONValue[];
+export interface NotificationData {
+    [key: string]: JSONValue;
+}
 
-module.exports = { process: processInternal };
+export interface Notification {
+    notificationId: string;
+    eventDate: string;
+    publishDate: string;
+    publishAttemptCount: number;
+    data: NotificationData;
+}
+
+export interface Message {
+    metadata?: {
+        topic: string;
+        schemaVersion?: string | null;
+        deprecated?: boolean;
+    };
+    notification?: Notification;
+}

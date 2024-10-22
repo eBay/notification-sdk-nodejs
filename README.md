@@ -18,11 +18,9 @@ While this SDK is generic for any topic, it currently includes the schema defini
 
 # Features
 
-This SDK is intended to bootstrap subscriptions to eBay Notifications and provides a ready NodeJS example.
+This SDK is intended to bootstrap subscriptions to eBay Notifications and provides a ready NodeJS example. It also incorporates support for endpoint validation.
 
-This SDK now also incorporates support for endpoint validation.
-
-This SDK incorporates
+The SDK includes:
 
 - A deployable example NodeJS application that is generic across topics and can process incoming https notifications
 - Allows registration of custom Message Processors.
@@ -49,13 +47,13 @@ NPM: v7.5.6 or higher
 Using npm:
 
 ```shell
-npm install event-notification-nodejs-sdk
+npm install @ebay/event-notification-nodejs-sdk
 ```
 
 Using yarn:
 
 ```shell
-yarn add event-notification-nodejs-sdk
+yarn add @ebay/event-notification-nodejs-sdk
 ```
 
 **Configure**
@@ -97,6 +95,25 @@ For MARKETPLACE_ACCOUNT_DELETION use case simply implement custom logic in [acco
 - Add the new topic constant to [constants.js](lib/constants.js)
 - Add a custom message processor for the new topic in `lib/processor/`
 - Update the [processor.js](lib/processor/processor.js) to return the new message processor for the topic
+
+**Importing Constants**
+You can import the constants from the package as follows:
+
+### CommonJS
+
+```js
+const { constants } = require('event-notification-nodejs-sdk');
+
+console.log(constants.TOPICS.MARKETPLACE_ACCOUNT_DELETION); // Output: 'MARKETPLACE_ACCOUNT_DELETION'
+```
+
+### ES Module
+
+```js
+import { constants } from 'event-notification-nodejs-sdk';
+
+console.log(constants.TOPICS.MARKETPLACE_ACCOUNT_DELETION); // Output: 'MARKETPLACE_ACCOUNT_DELETION'
+```
 
 Note: You can refer to [example.js](examples/example.js) for an example of how to setup an express server and use the SDK.
 
