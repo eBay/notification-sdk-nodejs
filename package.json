@@ -24,7 +24,7 @@
   "author": "Lokesh Rishi",
   "license": "ISC",
   "dependencies": {
-    "axios": "^0.21.1",
+    "axios": "^0.29.0",
     "ebay-oauth-nodejs-client": "^1.2.1",
     "express": "^4.17.1",
     "lru-cache": "^6.0.0"
